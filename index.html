@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>INTUITY - Paragraph Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      background: #0d0d0d;
+      color: white;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .background {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at 30% 20%, rgba(201, 169, 97, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 80%, rgba(201, 169, 97, 0.06) 0%, transparent 45%),
+                  radial-gradient(circle at 20% 70%, rgba(201, 169, 97, 0.04) 0%, transparent 60%),
+                  #0d0d0d;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .elegant-curves {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+
+    .curve-elegant {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(1px);
+    }
+
+    .curve-elegant-1 {
+      width: 300px;
+      height: 600px;
+      top: -200px;
+      right: -100px;
+      border: 1.5px solid rgba(201, 169, 97, 0.18);
+      background: linear-gradient(135deg, 
+        rgba(201, 169, 97, 0.06) 0%, 
+        rgba(201, 169, 97, 0.04) 50%, 
+        transparent 100%);
+      transform: rotate(25deg);
+      animation: floatElegant 12s ease-in-out infinite;
+    }
+
+    .curve-elegant-2 {
+      width: 400px;
+      height: 800px;
+      bottom: -300px;
+      left: -150px;
+      border: 1px solid rgba(201, 169, 97, 0.15);
+      background: linear-gradient(135deg, 
+        rgba(201, 169, 97, 0.05) 0%, 
+        transparent 60%);
+      transform: rotate(-20deg);
+      animation: floatElegant 15s ease-in-out infinite reverse;
+    }
+
+    .curve-elegant-3 {
+      width: 250px;
+      height: 500px;
+      top: 30%;
+      right: 5%;
+      border: 1px solid rgba(201, 169, 97, 0.13);
+      background: linear-gradient(135deg, 
+        rgba(201, 169, 97, 0.045) 0%, 
+        transparent 70%);
+      transform: rotate(45deg);
+      animation: driftElegant 18s ease-in-out infinite;
+    }
+
+    @keyframes floatElegant {
+      0%, 100% { 
+        transform: translateY(0) rotate(var(--base-rotation, 0deg));
+        opacity: 1;
+      }
+      50% { 
+        transform: translateY(-20px) rotate(calc(var(--base-rotation, 0deg) + 2deg));
+        opacity: 0.7;
+      }
+    }
+
+    @keyframes driftElegant {
+      0%, 100% { 
+        transform: translate(0, 0) rotate(45deg);
+      }
+      33% { 
+        transform: translate(10px, -15px) rotate(47deg);
+      }
+      66% { 
+        transform: translate(-5px, -10px) rotate(43deg);
+      }
+    }
+
+    .curve-elegant-1 { --base-rotation: 25deg; }
+    .curve-elegant-2 { --base-rotation: -20deg; }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.01'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      position: relative;
+      z-index: 2;
+      padding: 0 1rem;
+    }
+
+    /* Header with Back on left, INTUITY centered */
+    .header { 
+      display: grid;
+      grid-template-columns: 100px 1fr 100px;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0.75rem 1rem 0.5rem;
+    }
+
+    .header-left {
+      justify-self: start;
+    }
+
+    .header-center {
+      text-align: center;
+    }
+
+    .header-right {
+      /* Empty spacer */
+    }
+
+    .header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.25rem; 
+      font-weight: 700; 
+      color: #C9A961;
+      margin: 0; 
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #C9A961 0%, rgba(201, 169, 97, 0.8) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header .subtitle { 
+      font-size: 0.8125rem; 
+      color: #8e8e93; 
+      margin: 0.25rem 0 0.125rem; 
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .header .author { 
+      font-size: 0.6875rem; 
+      color: #636366; 
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      margin: 0;
+    }
+
+    /* Compact Toggle Switches */
+    .toggle-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      padding: 0 1rem;
+      flex-wrap: wrap;
+    }
+
+    .toggle-group {
+      display: flex;
+      background: rgba(28, 28, 30, 0.6);
+      backdrop-filter: blur(40px) saturate(150%);
+      -webkit-backdrop-filter: blur(40px) saturate(150%);
+      border-radius: 0.625rem;
+      padding: 0.25rem;
+      border: 1px solid rgba(84, 84, 88, 0.25);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      gap: 0.25rem;
+    }
+
+    .toggle-btn {
+      background: transparent;
+      border: none;
+      color: #8e8e93;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'DM Sans', sans-serif;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .toggle-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(201, 169, 97, 0.15), transparent);
+      transition: left 0.5s;
+    }
+
+    .toggle-btn:hover::before {
+      left: 100%;
+    }
+
+    .toggle-btn:hover {
+      color: #C9A961;
+    }
+
+    .toggle-btn.active {
+      background: rgba(201, 169, 97, 0.25);
+      color: #C9A961;
+      box-shadow: 0 2px 8px rgba(201, 169, 97, 0.2);
+      border: 1px solid rgba(201, 169, 97, 0.3);
+    }
+
+    .action-btn {
+      background: rgba(28, 28, 30, 0.6);
+      backdrop-filter: blur(40px) saturate(150%);
+      -webkit-backdrop-filter: blur(40px) saturate(150%);
+      border: 1px solid rgba(84, 84, 88, 0.25);
+      color: #C9A961;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border-radius: 0.625rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'DM Sans', sans-serif;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(201, 169, 97, 0.15), transparent);
+      transition: left 0.5s;
+    }
+
+    .action-btn:hover::before {
+      left: 100%;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(201, 169, 97, 0.25),
+                  0 0 0 1px rgba(201, 169, 97, 0.3);
+      border-color: rgba(201, 169, 97, 0.4);
+    }
+
+    /* Main Workspace */
+    .workspace {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem 2rem;
+    }
+
+    .sidebar {
+      background: rgba(28, 28, 30, 0.6);
+      backdrop-filter: blur(40px) saturate(150%);
+      -webkit-backdrop-filter: blur(40px) saturate(150%);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(84, 84, 88, 0.25);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      height: fit-content;
+      max-height: calc(100vh - 280px);
+      overflow-y: auto;
+      position: sticky;
+      top: 1.5rem;
+    }
+
+    .sidebar-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #C9A961;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #C9A961 0%, rgba(201, 169, 97, 0.8) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .expression-item {
+      background: rgba(28, 28, 30, 0.5);
+      border: 1px solid rgba(84, 84, 88, 0.2);
+      border-radius: 0.75rem;
+      padding: 0.625rem 0.75rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.6875rem;
+      line-height: 1.5;
+      color: #e5e5e7;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .expression-item:hover {
+      background: rgba(201, 169, 97, 0.1);
+      border-color: rgba(201, 169, 97, 0.3);
+      transform: translateX(4px);
+    }
+
+    .writing-area-container {
+      background: rgba(28, 28, 30, 0.6);
+      backdrop-filter: blur(40px) saturate(150%);
+      -webkit-backdrop-filter: blur(40px) saturate(150%);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(84, 84, 88, 0.25);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .writing-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .writing-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #C9A961;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #C9A961 0%, rgba(201, 169, 97, 0.8) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .word-count {
+      font-size: 0.6875rem;
+      color: #8e8e93;
+      font-weight: 600;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 450px;
+      background: rgba(13, 13, 13, 0.8);
+      border: 1px solid rgba(84, 84, 88, 0.2);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      color: #e5e5e7;
+      font-size: 0.875rem;
+      line-height: 1.8;
+      font-family: 'DM Sans', sans-serif;
+      resize: vertical;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: rgba(201, 169, 97, 0.4);
+      background: rgba(13, 13, 13, 0.95);
+      box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.1);
+    }
+
+    textarea::placeholder {
+      color: #636366;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+
+    .primary-btn {
+      background: rgba(201, 169, 97, 0.2);
+      border: 1px solid rgba(201, 169, 97, 0.4);
+    }
+
+    .primary-btn:hover {
+      background: rgba(201, 169, 97, 0.3);
+    }
+
+    .samples-container {
+      background: rgba(28, 28, 30, 0.6);
+      backdrop-filter: blur(40px) saturate(150%);
+      -webkit-backdrop-filter: blur(40px) saturate(150%);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(84, 84, 88, 0.25);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      width: 100%;
+    }
+
+    .samples-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(84, 84, 88, 0.2);
+    }
+
+    .samples-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .sample-card {
+      background: rgba(13, 13, 13, 0.6);
+      border: 1px solid rgba(84, 84, 88, 0.2);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sample-card:hover {
+      border-color: rgba(201, 169, 97, 0.3);
+      box-shadow: 0 8px 24px rgba(201, 169, 97, 0.1);
+    }
+
+    .sample-title-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .sample-title-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #C9A961;
+      letter-spacing: 0.02em;
+    }
+
+    .sample-content {
+      font-size: 0.8125rem;
+      line-height: 1.8;
+      color: #e5e5e7;
+    }
+
+    .sample-content p {
+      margin-bottom: 1rem;
+    }
+
+    .sample-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    .sample-content strong {
+      color: #C9A961;
+      font-weight: 600;
+    }
+
+    .expand-btn {
+      background: rgba(201, 169, 97, 0.15);
+      border: 1px solid rgba(201, 169, 97, 0.3);
+      color: #C9A961;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .expand-btn:hover {
+      background: rgba(201, 169, 97, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .sample-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(84, 84, 88, 0.15);
+    }
+
+    /* Scrollbar Styling */
+    .sidebar::-webkit-scrollbar,
+    textarea::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-track,
+    textarea::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb,
+    textarea::-webkit-scrollbar-thumb {
+      background: rgba(99, 99, 102, 0.4);
+      border-radius: 6px;
+      transition: background 0.2s ease;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb:hover,
+    textarea::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 99, 102, 0.6);
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        max-height: 400px;
+      }
+
+      .header {
+        grid-template-columns: auto 1fr auto;
+      }
+
+      .toggle-bar {
+        gap: 0.5rem;
+      }
+
+      #categoryGroup {
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .header h1 {
+        font-size: 1.75rem;
+      }
+
+      .toggle-btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.5625rem;
+      }
+
+      .action-btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.5625rem;
+      }
+
+      textarea {
+        min-height: 350px;
+        font-size: 0.8125rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background">
+    <div class="elegant-curves">
+      <div class="curve-elegant curve-elegant-1"></div>
+      <div class="curve-elegant curve-elegant-2"></div>
+      <div class="curve-elegant curve-elegant-3"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Header: Back [left], INTUITY [center], spacer [right] -->
+    <div class="header">
+      <div class="header-left">
+        <button class="action-btn" onclick="window.location.href='index.html'">← Back</button>
+      </div>
+      <div class="header-center">
+        <h1>INTUITY</h1>
+        <p class="subtitle">Intuitive & Immersive Learning</p>
+        <p class="author">by Majid Nashtai</p>
+      </div>
+      <div class="header-right"></div>
+    </div>
+
+    <!-- Compact Toggle Bar - Row 1: Mode + Levels -->
+    <div class="toggle-bar">
+      <div class="toggle-group">
+        <button class="toggle-btn active" onclick="switchMode('build')">Build Mode</button>
+        <button class="toggle-btn" onclick="switchMode('samples')">Sample Reviews</button>
+      </div>
+
+      <div class="toggle-group" id="levelGroup">
+        <button class="toggle-btn active" onclick="switchLevel('B2')">B2</button>
+        <button class="toggle-btn" onclick="switchLevel('C1')">C1</button>
+        <button class="toggle-btn" onclick="switchLevel('C2')">C2</button>
+      </div>
+    </div>
+
+    <!-- Row 2: Categories (only visible in build mode) -->
+    <div class="toggle-bar" id="categoryBar">
+      <div class="toggle-group" id="categoryGroup">
+        <button class="toggle-btn active" onclick="switchCategory('introduction')">Introduction</button>
+        <button class="toggle-btn" onclick="switchCategory('main')">Feature 1</button>
+        <button class="toggle-btn" onclick="switchCategory('atmosphere')">Feature 2</button>
+        <button class="toggle-btn" onclick="switchCategory('service')">Feature 3</button>
+        <button class="toggle-btn" onclick="switchCategory('conclusion')">Recommendation</button>
+      </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="workspace" id="buildWorkspace">
+      <!-- Sidebar with Expressions -->
+      <aside class="sidebar">
+        <div class="sidebar-title" id="sidebarTitle">B2 · Introduction</div>
+        <div id="expressionsList">
+          <!-- Expressions will be loaded here -->
+        </div>
+      </aside>
+
+      <!-- Writing Area -->
+      <div class="writing-area-container">
+        <div class="writing-header">
+          <div class="writing-title">Your Paragraph</div>
+          <div class="word-count" id="wordCount">0 words</div>
+        </div>
+        <textarea 
+          id="writingArea" 
+          placeholder="Start writing your paragraph here... Click any expression on the left to insert it at your cursor position."
+          spellcheck="true"
+        ></textarea>
+        <div class="action-buttons">
+          <button class="action-btn" onclick="clearText()">Clear</button>
+          <button class="action-btn primary-btn" onclick="saveText()">💾 Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Samples Workspace (Hidden by default) -->
+    <div class="workspace" id="samplesWorkspace" style="display: none;">
+      <div class="samples-container">
+        <div class="samples-header">
+          <div class="writing-title">Complete Sample Reviews</div>
+          <div class="word-count">Level: <span id="samplesLevel">B2</span></div>
+        </div>
+        <div id="samplesList" class="samples-list">
+          <!-- Samples will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data structures
+    const appData = {
+      expressions: {
+        B2: {
+          introduction: [
+            "Choosing a restaurant can be a huge challenge; this one is regarded by locals as one of the finest in Funchal.",
+            "Built in the 1970s and known for its authentic Espetada, it has become a local landmark.",
+            "Perched near the old market, this restaurant is considered by many as the place to taste traditional espetada.",
+            "Tucked away in the heart of Funchal, it describes the island's flavours with confidence.",
+            "When it comes to shopping in Funchal, this centre stands out as the most comprehensive destination.",
+            "Situated on the waterfront, this establishment has long been celebrated for its elegance and heritage.",
+            "Located in the city centre, this school is widely recognised as one of the leading institutions for language learning.",
+            "If you are looking for authentic local experience, this venue will exceed your expectations."
+          ],
+          main: [
+            "What makes this espetada so remarkable is its balance of smoke, seasoning and pure beef flavour.",
+            "By far one of the most tender espetadas I have ever had — each bite offers a near-perfect texture.",
+            "The dish is brilliant in its simplicity: laurel-wood char, sea salt and a hint of local honey.",
+            "You will find that the seasoning elevates rather than masks the meat's natural character.",
+            "The range of shops is impressive, featuring everything from high-street brands to boutique designers.",
+            "What particularly impressed me was the variety of dining options available throughout the centre."
+          ],
+          atmosphere: [
+            "The décor characterises Madeira's spirit: warm timber, stone floors and comfortable seating.",
+            "An appealing blend of rustic and refined elements gives the room a quietly sophisticated air.",
+            "The space is described as intimate yet airy, with careful attention to texture and light.",
+            "It feels unique and special — every detail seems chosen to support the overall experience.",
+            "The interior exudes colonial elegance, with high ceilings, polished wood and tasteful period furnishings."
+          ],
+          service: [
+            "The staff are gracious and discreet — attentive without ever being overbearing.",
+            "I was fortunate to meet a brilliant team whose professionalism is matched by genuine warmth.",
+            "Guests will find service efficient, informed and quietly confident.",
+            "Considered one of the restaurant's strengths, the front-of-house adds calm expertise to the meal.",
+            "Known for their friendly recommendations, the team makes each visit smoother."
+          ],
+          conclusion: [
+            "I highly recommend this restaurant for anyone who appreciates perfected, simple cooking.",
+            "I can assure you that for anyone looking for a memorable espetada, this is a must.",
+            "By far one of the most satisfying meals to be had in Funchal — book ahead.",
+            "This is a place you cannot afford to miss if you value tradition done exceptionally well.",
+            "All things considered, it thoroughly deserves its reputation and I would return without hesitation."
+          ]
+        },
+        C1: {
+          introduction: [
+            "Having heard so much about this place, I was eager to see whether it lived up to its reputation.",
+            "What strikes you immediately is the attention to detail that characterises every aspect of the experience.",
+            "Widely regarded as one of Funchal's hidden gems, this establishment combines authenticity with refinement.",
+            "Despite being off the main tourist trail, it has garnered a loyal following among discerning diners."
+          ],
+          main: [
+            "The facilities are second to none — spacious, well-maintained and equipped with modern amenities.",
+            "The teaching methodology stands out for its communicative approach and personalised attention.",
+            "Classes are kept deliberately small, which allows for meaningful interaction and rapid progress.",
+            "The rooms themselves are beautifully appointed, combining period charm with contemporary comfort.",
+            "What sets this apart is the meticulous attention to sourcing and preparation.",
+            "The balance of flavours demonstrates a sophisticated understanding of the cuisine."
+          ],
+          atmosphere: [
+            "The atmosphere strikes the perfect balance between formal refinement and welcoming warmth.",
+            "Natural light floods through large windows, creating a bright and inspiring learning environment.",
+            "The layout is modern and intuitive, making navigation effortless even during busy periods.",
+            "Gardens surround the property, offering tranquil spaces that enhance the sense of escape.",
+            "Built in a traditional style, the interior feels rooted and honest, never contrived."
+          ],
+          service: [
+            "The teachers demonstrate exceptional expertise, delivering lessons with clarity and enthusiasm.",
+            "Staff members go out of their way to ensure visitors feel welcomed and well-informed.",
+            "Service is consistently excellent — prompt, courteous and delivered with genuine care.",
+            "What impressed me most was how staff anticipated needs without being intrusive.",
+            "The reception team handled enquiries with impressive efficiency and multilingual competence."
+          ],
+          conclusion: [
+            "Whether you are seeking shopping, dining or entertainment, this venue delivers on all fronts.",
+            "For anyone serious about language learning, this school offers an unparalleled combination of quality and support.",
+            "If you are planning a stay in Funchal, this hotel represents the finest choice for discerning travellers.",
+            "In summary, this is an experience that combines excellence with authenticity in equal measure.",
+            "I left feeling enriched by the experience and confident in recommending it to others."
+          ]
+        },
+        C2: {
+          introduction: [
+            "Acknowledged as a defining feature of Funchal's culinary landscape, this establishment has maintained its reputation through unwavering commitment to tradition.",
+            "Having been shaped by decades of evolution, the venue now represents a synthesis of heritage and contemporary sensibility.",
+            "Confronted with the challenge of preserving authenticity while meeting modern expectations, the management has succeeded admirably.",
+            "Driven by a philosophy that prizes quality over ostentation, this remains one of the island's most compelling destinations."
+          ],
+          main: [
+            "What distinguishes the offering is its refusal to compromise on fundamental principles of preparation and presentation.",
+            "The approach, rooted in classical technique yet responsive to contemporary palates, yields results that are both familiar and revelatory.",
+            "Employing methods passed down through generations, the kitchen demonstrates that restraint can be more powerful than elaboration.",
+            "The outcome reflects a deep understanding of how simple ingredients, treated with respect, can transcend their humble origins."
+          ],
+          atmosphere: [
+            "The interior, characterized by understated elegance, avoids the pitfalls of either excessive minimalism or baroque excess.",
+            "Spatial design, informed by an appreciation for both intimacy and openness, creates an environment conducive to contemplation.",
+            "Architectural elements, carefully preserved yet subtly modernized, speak to a reverence for history without nostalgia.",
+            "The ambiance, neither austere nor ostentatious, strikes a balance that enhances rather than dominates the experience."
+          ],
+          service: [
+            "Staff, trained to anticipate without presuming, navigate the delicate balance between attentiveness and discretion.",
+            "The team's approach, marked by professionalism tempered with genuine warmth, elevates the overall encounter.",
+            "Service standards, maintained consistently across all touchpoints, reflect an institutional commitment to excellence.",
+            "Personnel demonstrate the kind of expertise that comes only from sustained engagement with the craft."
+          ],
+          conclusion: [
+            "Having considered the totality of the experience, one is compelled to acknowledge this as a benchmark against which others must be measured.",
+            "The establishment warrants attention not through marketing rhetoric but through the quiet confidence of sustained quality.",
+            "For those seeking an experience unmarred by compromise, this represents a rare and valuable discovery.",
+            "In an era where authenticity is frequently claimed but seldom delivered, this stands as a notable exception worthy of recognition."
+          ]
+        }
+      },
+      samples: {
+        B2: [
+          {
+            title: "Espetada Restaurant — Funchal",
+            content: `<p><strong>Known for its authentic espetada,</strong> the restaurant continues to impress because the meat is carefully sourced and roasted over laurel wood — for example, the set menu pairs a brisket espetada with a smoky, caramelised crust that yields a tender bite. The result is deeply satisfying; compared with many tourist-focused spots, this one retains an honest, traditional flavour.</p>
+
+<p><strong>What makes the food so special</strong> is the restrained seasoning which allows the beef's natural quality to shine — for instance, a simple brush of local honey in one dish enhanced the caramel notes. The outcome is a plate that feels both refined and homely; it contrasts with flashier restaurants where sauces mask the meat.</p>
+
+<p><strong>The décor characterises Madeira's rustic warmth,</strong> with exposed beams and stone details — the wooden tables and low lighting create a comfortable scene. The effect is intimate and appealing; in contrast to contemporary minimalist venues, this space emphasises tradition.</p>
+
+<p><strong>The staff are gracious and discreet,</strong> offering recommendations and timely service — for example, the waiter suggested a side that complemented the espetada perfectly. Guests will find the service enhances the meal; contrasted with rushed tourist eateries, the team here slows the pace to match the food.</p>
+
+<p><strong>I highly recommend this restaurant</strong> for anyone seeking an authentic Madeiran meal: book ahead and arrive hungry, and you'll find a memorable dining experience. It's one of those places you won't regret visiting.</p>`
+          },
+          {
+            title: "Forum Madeira Shopping Centre",
+            content: `<p><strong>When it comes to shopping in Funchal, Forum Madeira stands out</strong> because it combines a comprehensive retail offering with excellent facilities — for instance, the centre houses over 80 shops spanning international brands, local boutiques and a well-curated food court. The result is a one-stop destination; compared with smaller shopping areas, it offers far greater variety under one roof.</p>
+
+<p><strong>What makes the experience particularly appealing</strong> is the modern, spacious layout which prevents the claustrophobic feeling common in urban malls — clear signage and intuitive design mean you can navigate easily even during peak hours. The outcome is stress-free shopping; in contrast to congested city-centre streets, this feels calm and organised.</p>
+
+<p><strong>The atmosphere is welcoming and family-friendly,</strong> with natural light flooding through large skylights and comfortable seating areas throughout — the cinema and entertainment zone add recreational value beyond pure retail. The effect is a destination for all ages; contrasted with purely transactional shopping spaces, this encourages visitors to linger.</p>
+
+<p><strong>Staff across various outlets are consistently helpful,</strong> offering assistance without pressure — for example, information desk personnel provided clear directions and recommendations in both Portuguese and English. Visitors will find service courteous and efficient; compared with less attentive venues, the human element here enhances the experience.</p>
+
+<p><strong>Whether you are seeking fashion, electronics or simply a pleasant environment to spend an afternoon,</strong> Forum Madeira delivers on all fronts. It is conveniently located, well-maintained and offers genuine value — I would recommend it to anyone visiting Funchal.</p>`
+          }
+        ],
+        C1: [
+          {
+            title: "Reid's Palace Hotel — Funchal",
+            content: `<p><strong>Situated on a clifftop overlooking the Atlantic, Reid's Palace has long been celebrated</strong> because it embodies a rare combination of colonial elegance and contemporary luxury — for example, the property has hosted royalty and literary figures since 1891, yet it continually updates facilities to meet modern expectations. The result is timeless sophistication; contrasted with soulless chain hotels, this feels genuinely distinguished.</p>
+
+<p><strong>What particularly impressed me was the quality of the rooms,</strong> which feature high ceilings, period furnishings and balconies with spectacular ocean views — attention to detail extends from Egyptian cotton linens to carefully chosen artworks. The outcome is accommodation that feels both luxurious and authentic; in comparison to impersonal boutique hotels, Reid's offers substance alongside style.</p>
+
+<p><strong>The gardens are magnificent,</strong> featuring subtropical plants, manicured lawns and dramatic coastal paths — the terraced design creates intimate spaces while preserving panoramic vistas. The effect is one of serene escape; contrasted with urban hotels, this provides a genuine retreat.</p>
+
+<p><strong>Service throughout the hotel is exemplary,</strong> delivered with the kind of unobtrusive professionalism that only comes from long-established training — for instance, staff remembered preferences without being asked and offered thoughtful local recommendations. Guests will find the experience seamless; compared with hotels where service feels scripted, this demonstrates genuine care.</p>
+
+<p><strong>If you are planning a stay in Funchal and value heritage, refinement and exceptional hospitality,</strong> Reid's Palace represents the finest choice. It is not inexpensive, but the quality justifies the investment — I left feeling the experience thoroughly merited its reputation.</p>`
+          }
+        ],
+        C2: [
+          {
+            title: "Critical Analysis — Contemporary Dining Standards",
+            content: `<p><strong>Acknowledged as a defining feature of Funchal's culinary landscape,</strong> the establishment has maintained its reputation through unwavering commitment to tradition — rigorous sourcing protocols ensure that only premium local ingredients reach the kitchen, while preparation techniques, refined over decades, demonstrate an institutional understanding of flavour development. The result is cuisine that transcends mere sustenance; contrasted with concept-driven venues prioritising novelty, this exemplifies the power of disciplined consistency.</p>
+
+<p><strong>What distinguishes the offering is its refusal to compromise on fundamental principles,</strong> evident in the kitchen's approach to seasoning and timing — each element receives calibrated attention, from the controlled char achieved through precise temperature management to the resting periods that allow proteins to reach optimal tenderness. The outcome reflects mastery born of repetition; in comparison to establishments relying on technique alone, this demonstrates wisdom accumulated through sustained practice.</p>
+
+<p><strong>The interior, characterized by understated elegance,</strong> employs spatial design informed by both historical precedent and contemporary sensibility — period architectural details coexist with modern amenities, creating an environment that honours heritage without succumbing to nostalgia. The ambiance facilitates rather than dominates the dining experience; contrasted with venues where design overwhelms content, this achieves a rare equilibrium.</p>
+
+<p><strong>Service standards reflect an institutional commitment to excellence,</strong> manifested in staff who navigate the delicate balance between attentiveness and discretion — interactions demonstrate procedural expertise tempered by genuine hospitality, suggesting training systems that prioritise both technical competence and emotional intelligence. Personnel performance enhances rather than merely supports the experience; compared with operations where service feels transactional, this exemplifies hospitality as craft.</p>
+
+<p><strong>Having considered the totality of the experience,</strong> one is compelled to acknowledge this as a benchmark against which others must be measured — it warrants attention not through marketing rhetoric but through the quiet confidence of sustained quality, representing the kind of establishment that validates the possibility of excellence within traditional frameworks.</p>`
+          }
+        ]
+      }
+    };
+
+    let currentLevel = 'B2';
+    let currentCategory = 'introduction';
+    let currentMode = 'build';
+
+    function switchMode(mode) {
+      currentMode = mode;
+      
+      // Update button states
+      document.querySelectorAll('.toggle-group:first-child .toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Show/hide category bar
+      const categoryBar = document.getElementById('categoryBar');
+      
+      // Show/hide workspaces
+      if (mode === 'build') {
+        document.getElementById('buildWorkspace').style.display = 'grid';
+        document.getElementById('samplesWorkspace').style.display = 'none';
+        categoryBar.style.display = 'flex';
+      } else {
+        document.getElementById('buildWorkspace').style.display = 'none';
+        document.getElementById('samplesWorkspace').style.display = 'block';
+        categoryBar.style.display = 'none';
+        loadSamples();
+      }
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      
+      // Update button states
+      document.querySelectorAll('#levelGroup .toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      if (currentMode === 'build') {
+        loadExpressions();
+      } else {
+        loadSamples();
+      }
+    }
+
+    function switchCategory(category) {
+      currentCategory = category;
+      
+      // Update button states
+      document.querySelectorAll('#categoryGroup .toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      loadExpressions();
+    }
+
+    function loadExpressions() {
+      const expressions = appData.expressions[currentLevel][currentCategory];
+      const sidebarTitle = document.getElementById('sidebarTitle');
+      const expressionsList = document.getElementById('expressionsList');
+      
+      // Update title
+      const categoryName = currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1);
+      sidebarTitle.textContent = `${currentLevel} · ${categoryName}`;
+      
+      // Clear and populate expressions
+      expressionsList.innerHTML = '';
+      
+      if (expressions && expressions.length > 0) {
+        expressions.forEach(expr => {
+          const item = document.createElement('div');
+          item.className = 'expression-item';
+          item.textContent = expr;
+          item.onclick = () => insertExpression(expr);
+          expressionsList.appendChild(item);
+        });
+      } else {
+        expressionsList.innerHTML = '<div class="expression-item" style="opacity: 0.6; cursor: default;">No expressions available for this category.</div>';
+      }
+    }
+
+    function loadSamples() {
+      const samples = appData.samples[currentLevel];
+      const samplesLevel = document.getElementById('samplesLevel');
+      const samplesList = document.getElementById('samplesList');
+      
+      samplesLevel.textContent = currentLevel;
+      samplesList.innerHTML = '';
+      
+      if (samples && samples.length > 0) {
+        samples.forEach((sample, index) => {
+          const card = document.createElement('div');
+          card.className = 'sample-card';
+          
+          const titleBar = document.createElement('div');
+          titleBar.className = 'sample-title-bar';
+          
+          const title = document.createElement('div');
+          title.className = 'sample-title-text';
+          title.textContent = sample.title;
+          
+          const expandBtn = document.createElement('button');
+          expandBtn.className = 'expand-btn';
+          expandBtn.textContent = index === 0 ? 'Collapse' : 'Expand';
+          expandBtn.onclick = (e) => {
+            const content = card.querySelector('.sample-content');
+            const actions = card.querySelector('.sample-actions');
+            if (content.style.display === 'none') {
+              content.style.display = 'block';
+              actions.style.display = 'flex';
+              e.target.textContent = 'Collapse';
+            } else {
+              content.style.display = 'none';
+              actions.style.display = 'none';
+              e.target.textContent = 'Expand';
+            }
+          };
+          
+          titleBar.appendChild(title);
+          titleBar.appendChild(expandBtn);
+          
+          const content = document.createElement('div');
+          content.className = 'sample-content';
+          content.innerHTML = sample.content;
+          if (index !== 0) content.style.display = 'none';
+          
+          const actions = document.createElement('div');
+          actions.className = 'sample-actions';
+          if (index !== 0) actions.style.display = 'none';
+          
+          const copyBtn = document.createElement('button');
+          copyBtn.className = 'action-btn primary-btn';
+          copyBtn.textContent = 'Copy Sample';
+          copyBtn.onclick = () => copySample(sample.content);
+          
+          actions.appendChild(copyBtn);
+          
+          card.appendChild(titleBar);
+          card.appendChild(content);
+          card.appendChild(actions);
+          
+          samplesList.appendChild(card);
+        });
+      } else {
+        samplesList.innerHTML = '<div class="sample-card"><p style="opacity: 0.6; text-align: center;">No samples available for this level.</p></div>';
+      }
+    }
+
+    function copySample(htmlContent) {
+      const temp = document.createElement('div');
+      temp.innerHTML = htmlContent;
+      const text = temp.textContent || temp.innerText || '';
+      
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target;
+        const original = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        btn.style.background = 'rgba(201, 169, 97, 0.35)';
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.style.background = '';
+        }, 1500);
+      }).catch(() => {
+        alert('Copy failed — please select text manually.');
+      });
+    }
+
+    function insertExpression(text) {
+      const textarea = document.getElementById('writingArea');
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const before = textarea.value.substring(0, start);
+      const after = textarea.value.substring(end);
+      
+      const needsSpaceBefore = before.length > 0 && !before.endsWith(' ') && !before.endsWith('\n');
+      const prefix = needsSpaceBefore ? ' ' : '';
+      
+      textarea.value = before + prefix + text + ' ' + after;
+      
+      const newPos = start + prefix.length + text.length + 1;
+      textarea.setSelectionRange(newPos, newPos);
+      textarea.focus();
+      
+      updateWordCount();
+    }
+
+    function updateWordCount() {
+      const textarea = document.getElementById('writingArea');
+      const text = textarea.value.trim();
+      const words = text ? text.split(/\s+/).length : 0;
+      document.getElementById('wordCount').textContent = `${words} word${words !== 1 ? 's' : ''}`;
+    }
+
+    function clearText() {
+      if (confirm('Are you sure you want to clear all text?')) {
+        document.getElementById('writingArea').value = '';
+        updateWordCount();
+      }
+    }
+
+    function saveText() {
+      const text = document.getElementById('writingArea').value;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `INTUITY_${currentLevel}_Paragraph_${new Date().toISOString().split('T')[0]}.txt`;
+      link.click();
+      
+      const btn = event.target;
+      const original = btn.innerHTML;
+      btn.innerHTML = '✓ Saved!';
+      btn.style.background = 'rgba(201, 169, 97, 0.35)';
+      setTimeout(() => {
+        btn.innerHTML = original;
+        btn.style.background = '';
+      }, 1500);
+    }
+
+    document.getElementById('writingArea').addEventListener('input', updateWordCount);
+    loadExpressions();
+  </script>
+</body>
+</html>
